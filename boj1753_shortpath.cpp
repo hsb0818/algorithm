@@ -17,24 +17,15 @@ struct Vertex
 	Vertex(int _id, int _dist) : id(_id), dist(_dist) {}
 };
 
-struct Road
-{
-	int dest;
-	int dist;
-
-	Road(int _dest, int _dist) : dest(_dest), dist(_dist) {}
-};
-
-vector<vector<Road> > map;
-vector<int> dist;
-vector<int> visit;
-
 struct comp 
 { 
 	bool operator () (const Vertex& v1, const Vertex& v2) { return v1.dist > v2.dist; } 
 };
 
 priority_queue<Vertex, vector<Vertex>, comp> pq;
+vector<vector<Vertex> > map;
+vector<int> dist;
+vector<int> visit;
 
 int main()
 {
@@ -60,10 +51,10 @@ int main()
 	for (int i = 0; i < ecount; i++)
 	{
 		scanf("%d%d%d", &u, &v, &w);
-		map[u].push_back(Road(v, w));
+		map[u].push_back(Vertex(v, w));
 	}
 
-	vector<Road>::iterator itr;
+	vector<Vertex>::iterator itr;
 	while (pq.empty() == false)
 	{
 		Vertex cur = pq.top();
@@ -76,10 +67,10 @@ int main()
 		for (itr = map[cur.id].begin(); itr < map[cur.id].end(); itr++)
 		{
 			int next = dist[cur.id] + itr->dist;
-			if (dist[itr->dest] > next)
+			if (dist[itr->id] > next)
 			{
-				dist[itr->dest] = next;
-				pq.push(Vertex(itr->dest, dist[itr->dest]));
+				dist[itr->id] = next;
+				pq.push(Vertex(itr->id, dist[itr->id]));
 			}
 		}
 	}

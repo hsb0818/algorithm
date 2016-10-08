@@ -7,16 +7,6 @@ const int MAX_M = 100000;
 
 using namespace std;
 
-struct Road
-{
-	int dest;
-	int dist;
-
-	Road(int _dest, int _dist) : dest(_dest), dist(_dist) {}
-};
-
-vector<vector<Road> > map;
-
 struct Vertex
 {
 	int id;
@@ -31,7 +21,7 @@ struct comp
 };
 
 priority_queue<Vertex, vector<Vertex>, comp> pq;
-
+vector<vector<Vertex> > map;
 vector<int> visit;
 
 int main()
@@ -51,12 +41,12 @@ int main()
 	for (int i = 0; i < m; i++)
 	{
 		scanf("%d%d%d", &u, &v, &w);
-		map[u].push_back(Road(v, w));
-		map[v].push_back(Road(u, w));
+		map[u].push_back(Vertex(v, w));
+		map[v].push_back(Vertex(u, w));
 	}
 
 	int dist = 0;
-	vector<Road>::iterator itr;
+	vector<Vertex>::iterator itr;
 	while (pq.empty() == false)
 	{
 		Vertex cur = pq.top();
@@ -69,10 +59,10 @@ int main()
 
 		for (itr = map[cur.id].begin(); itr < map[cur.id].end(); itr++)
 		{
-			if (visit[itr->dest] == 1)
+			if (visit[itr->id] == 1)
 				continue;
 
-			pq.push(Vertex(itr->dest, itr->dist));
+			pq.push(Vertex(itr->id, itr->dist));
 		}
 
 		dist += cur.dist;
