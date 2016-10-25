@@ -2,6 +2,12 @@
 #include <vector>
 #include <queue>
 
+/*
+	왔는가..미래의 나여...
+	kruskal 알고리즘의 기본형. 하지만 rank 개념을 넣어서 더 최적화가 가능하다.
+	boj 1979 문제의 disjoint-set 구현했던 것을 참고하자.
+*/
+
 using namespace std;
 
 struct Edge
@@ -24,7 +30,6 @@ struct comp
 
 priority_queue<Edge, vector<Edge>, comp> pq;
 vector<int> parent;
-vector<int> coast;
 
 int find(int v);
 void union_group(int a, int b);
@@ -38,20 +43,11 @@ int main()
 	for (int i = 1; i <= n; i++)
 		parent[i] = i;
 
-	coast.resize(n + 1);
-	fill(coast.begin(), coast.end(), 0);
-
-	for (int i = 1; i <= n; i++)
-	{
-		scanf("%d", &money);
-		coast[i] = money;
-	}
-
 	int u, v, w;
 	for (int i = 0; i < m; i++)
 	{
 		scanf("%d%d%d", &u, &v, &w);
-		pq.push(Edge(u, v, w * 2 + coast[u] + coast[v]));
+		pq.push(Edge(u, v, w));
 	}
 
 	int dist = 0;
