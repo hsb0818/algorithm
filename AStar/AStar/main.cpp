@@ -1,22 +1,49 @@
 #include <iostream>
+#include <time.h>
 #include "Astar.h"
+#include "Dijikstra.h"
+
+#define SIZE 512
+#define V 200
+#define W 20
+#define START 10
+#define DEST 200
 
 int main()
 {
-	AStar spf(6, 9);
-	spf.RegistVertexToMap(0, 1, 10);
-	spf.RegistVertexToMap(0, 2, 30);
-	spf.RegistVertexToMap(0, 3, 15);
-	spf.RegistVertexToMap(1, 4, 20);
-	spf.RegistVertexToMap(2, 5, 5);
-	spf.RegistVertexToMap(3, 2, 5);
-	spf.RegistVertexToMap(3, 5, 20);
-	spf.RegistVertexToMap(4, 5, 20);
-	spf.RegistVertexToMap(5, 3, 20);
+	Dijikstra dspf(SIZE, SIZE);
+	AStar spf(SIZE, SIZE);
+	for (int y = 0; y<V; y++)
+	{
+		for (int x = 0; x<V; x++)
+		{
+			dspf.RegistVertexPosToMap(y * 4 + x, x, y);
+			spf.RegistVertexPosToMap(y * 4 + x, x, y);
+		}
+	}
 
-	spf.Run(0, 5);
+	for (int y = 0; y<V-1; y++)
+	{
+		for (int x = 0; x<V-1; x++)
+		{
+			spf.RegistVertexToMap(y * 4 + x, (y + 1) * 4 + x, rand()%W, true);
+			spf.RegistVertexToMap(y * 4 + x, y * 4 + (x + 1), rand()%W, true);
 
-	vector<Vertex> path = spf.GetShortestPath(5);
+			dspf.RegistVertexToMap(y * 4 + x, (y + 1) * 4 + x, rand() % W, true);
+			dspf.RegistVertexToMap(y * 4 + x, y * 4 + (x + 1), rand() % W, true);
+		}
+	}
+
+	cout << "Size : " << V << endl;
+	time_t st = clock();
+	spf.Run(START, DEST);
+	cout << "A* : " << (double)(clock() - st)/CLK_TCK << " time"<<endl;
+
+	st = clock();
+	dspf.Run(START, DEST);
+	cout<<"Dijkstra : " << (double)(clock() - st) / CLK_TCK << " time" << endl;
+
+	vector<Vertex> path = spf.GetShortestPath(DEST);
 	for (int i = 0; i<path.size(); i++)
 		printf("%d -> ", path[i].dest_id);
 	printf("\n");
