@@ -88,9 +88,12 @@ function tupleSameProduct(nums: number[]): number {
         }
     }
 
-    return Array
-        .from(tupleMap, tuple => tuple)
-        .reduce((answer, [mul, cnt]) => answer + ((cnt >= 2) ? 4 * (cnt - 1) * cnt : 0), 0);
+    let answer = 0;
+    for (const [mul, cnt] of tupleMap) {
+        answer += (cnt >= 2) ? 4 * (cnt - 1) * cnt : 0;
+    }
+
+    return answer;
 };
 
 console.log(tupleSameProduct([2, 3, 4, 6]));
